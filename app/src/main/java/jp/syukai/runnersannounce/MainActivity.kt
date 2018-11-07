@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
 import android.Manifest
+import android.content.Intent
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
@@ -29,9 +30,21 @@ class MainActivity : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)==
+                PackageManager.PERMISSION_GRANTED){
+
+
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location : Location? ->
+                        Snackbar.make(view, location?.latitude.toString() + "/" + location?.longitude.toString() , Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show()
+                    }
+            locationActivity();
+            }
         }
+
+        checkPermission()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -56,7 +69,16 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION)==
             PackageManager.PERMISSION_GRANTED){
 
-            locationActivity();
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location : Location? ->
+                    System.out.println(location.toString())
+//                    var toast = Toast(this)
+//                    toast.setText("location:" + location.toString())
+//                    toast.show()
+
+                    // Got last known location. In some rare situations this can be null.
+                }
+//            locationActivity();
         }
         // 拒否していた場合
         else{
@@ -65,15 +87,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Intent でLocation
-    fun locationActivity() {
-
-//        fusedLocationClient.lastLocation
-//            .addOnSuccessListener { location : Location? ->
-//                System.out.println(location.toString())
-//                // Got last known location. In some rare situations this can be null.
-//            }
-//        Intent intent = new Intent(getApplication(), LocationActivity.class);
-//        startActivity(intent);
+    private fun locationActivity() {
+        startActivity(Intent(application, LocationActivity::class.java))
     }
 
     // 許可を求める
