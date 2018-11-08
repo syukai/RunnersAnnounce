@@ -15,7 +15,12 @@ import com.google.android.gms.location.LocationServices
 
 import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.Toast
-
+import android.content.Context.JOB_SCHEDULER_SERVICE
+import android.support.v4.content.ContextCompat.getSystemService
+import android.app.job.JobScheduler
+import android.content.ComponentName
+import android.app.job.JobInfo
+import android.content.Context
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +33,12 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        val info = JobInfo.Builder(1, ComponentName(this, LocService::class.java))
+            .setPeriodic(1000*5, 500)
+            .build()
+        val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        scheduler.schedule(info)
 
         fab.setOnClickListener { view ->
             if (ActivityCompat.checkSelfPermission(this,
