@@ -1,31 +1,29 @@
 package jp.syukai.runnersannounce
 
+import android.Manifest
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.Manifest
-import android.content.Intent
+import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-
 import kotlinx.android.synthetic.main.activity_main.*
-import android.widget.Toast
-import android.content.Context.JOB_SCHEDULER_SERVICE
-import android.support.v4.content.ContextCompat.getSystemService
-import android.app.job.JobScheduler
-import android.content.ComponentName
-import android.app.job.JobInfo
-import android.content.Context
 
 
 class MainActivity : AppCompatActivity() {
     private val REQUEST_PERMISSION = 10
-    private lateinit var fusedLocationClient: FusedLocationProviderClient;
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,24 +32,29 @@ class MainActivity : AppCompatActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        val info = JobInfo.Builder(1, ComponentName(this, LocService::class.java))
-            .setPeriodic(1000*5, 500)
-            .build()
-        val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-        scheduler.schedule(info)
+//        val info = JobInfo
+//            .Builder(1, ComponentName(this, LocService::class.java))
+//            .setPeriodic(1000*5, 500)
+//            .build()
+//        val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+//        scheduler.schedule(info)
+
+        Log.d("MainActivity", "startService")
+        this.startService (Intent(this.applicationContext, LocService::class.java))
+        Log.d("MainActivity", "started")
+
 
         fab.setOnClickListener { view ->
             if (ActivityCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)==
                 PackageManager.PERMISSION_GRANTED){
 
-
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
                         Snackbar.make(view, location?.latitude.toString() + "/" + location?.longitude.toString() , Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show()
                     }
-            locationActivity();
+            locationActivity()
             }
         }
 
@@ -74,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     // 位置情報許可の確認
-    fun checkPermission() {
+    private fun checkPermission() {
         // 既に許可している
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)==
@@ -93,7 +96,7 @@ class MainActivity : AppCompatActivity() {
         }
         // 拒否していた場合
         else{
-            requestLocationPermission();
+            requestLocationPermission()
         }
     }
 
