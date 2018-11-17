@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
     private val REQUEST_PERMISSION = 10
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locServiceIntent: Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +41,8 @@ class MainActivity : AppCompatActivity() {
 //        scheduler.schedule(info)
 
         Log.d("MainActivity", "startService")
-        this.startService (Intent(this.applicationContext, LocService::class.java))
+        this.locServiceIntent = Intent(this.applicationContext, LocService::class.java)
+        this.startService (this.locServiceIntent)
         Log.d("MainActivity", "started")
 
 

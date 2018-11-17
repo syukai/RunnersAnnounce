@@ -14,9 +14,9 @@ class LocService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return super.onStartCommand(intent, flags, startId)
         System.out.println("service Start Command")
         Log.d("LocService", "service Start Command")
+        return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onBind(intent: Intent): IBinder {
@@ -26,9 +26,9 @@ class LocService : Service() {
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
-        return super.onUnbind(intent)
         System.out.println("service UnBind")
         Log.d("LocService", "service UnBind")
+        return super.onUnbind(intent)
     }
 
 
