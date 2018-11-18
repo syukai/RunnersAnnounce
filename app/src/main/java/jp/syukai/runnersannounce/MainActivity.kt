@@ -45,6 +45,8 @@ class MainActivity : AppCompatActivity() {
         this.startService (this.locServiceIntent)
         Log.d("MainActivity", "started")
 
+        LocIntentService.startActionFoo(this,"aaaa", "bbbb")
+
 
         fab.setOnClickListener { view ->
             if (ActivityCompat.checkSelfPermission(this,
